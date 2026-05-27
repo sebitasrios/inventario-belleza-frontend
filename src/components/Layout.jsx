@@ -1,12 +1,16 @@
 import Sidebar from './Sidebar'
-import { Outlet } from 'react-router-dom'
 
-function Layout() {
+function Layout({ children }) {
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div style={{ display: 'flex' }}>
       <Sidebar />
-      <main className="flex-1 p-8">
-        <Outlet />
+      <main style={{
+        marginLeft: '230px',
+        minHeight: '100vh',
+        background: '#f5f6fa',
+        flex: 1
+      }}>
+        {children}
       </main>
     </div>
   )

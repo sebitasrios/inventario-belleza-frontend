@@ -1,1 +1,42 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f6fa;
+  color: #1a1d23;
+}
+
+thead th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  border-bottom: 1px solid #f0f1f5;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+tbody tr {
+  border-bottom: 1px solid #f5f6fa;
+  transition: background 0.1s;
+}
+
+tbody tr:hover {
+  background: #fafbfc;
+}
+
+tbody td {
+  padding: 12px 14px;
+  font-size: 13.5px;
+  color: #374151;
+}

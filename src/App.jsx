@@ -1,11 +1,22 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import Dashboard from './pages/Dashboard'
+import Productos from './pages/Productos'
+import Categorias from './pages/Categorias'
+import Proveedores from './pages/Proveedores'
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold text-purple-700">
-        Inventario Belleza
-      </h1>
-      <p className="text-gray-500 mt-2">Panel de administración</p>
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/productos" element={<Productos />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/proveedores" element={<Proveedores />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   )
 }
 
