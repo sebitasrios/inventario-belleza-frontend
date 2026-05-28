@@ -8,13 +8,17 @@ function Sidebar() {
     return (
       <NavLink to={to} style={{ textDecoration: 'none' }}>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: '9px',
-          padding: '9px 14px', borderRadius: '7px', cursor: 'pointer',
-          fontSize: '13.5px', margin: '1px 10px', fontWeight: active ? '500' : '400',
-          color: active ? '#3b5bdb' : '#6b7280',
-          background: active ? '#f0f4ff' : 'transparent',
-          transition: 'all 0.15s'
-        }}>
+          display: 'flex', alignItems: 'center', gap: '10px',
+          padding: '10px 14px', borderRadius: '8px', cursor: 'pointer',
+          fontSize: '13px', margin: '2px 10px',
+          fontWeight: active ? '500' : '400',
+          color: active ? '#ffffff' : 'rgba(255,255,255,0.55)',
+          background: active ? 'var(--coral)' : 'transparent',
+          transition: 'all 0.2s ease',
+        }}
+          onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#fff' }}
+          onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' } }}
+        >
           {icon}
           {label}
         </div>
@@ -24,32 +28,37 @@ function Sidebar() {
 
   return (
     <aside style={{
-      width: '230px', minHeight: '100vh', background: '#ffffff',
-      borderRight: '1px solid #e8eaf0', position: 'fixed', top: 0, left: 0, zIndex: 10
+      width: '230px', minHeight: '100vh',
+      background: 'var(--navy)',
+      borderRight: 'none',
+      position: 'fixed', top: 0, left: 0, zIndex: 10,
+      display: 'flex', flexDirection: 'column'
     }}>
 
       {/* Logo */}
-      <div style={{ padding: '18px 20px 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '6px 4px' }}>
+      <div style={{ padding: '22px 20px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 4px' }}>
           <div style={{
-            width: '30px', height: '30px', background: '#eff6ff',
-            borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            width: '32px', height: '32px',
+            background: 'var(--coral)',
+            borderRadius: '8px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#3b5bdb" strokeWidth="2" style={{ width: '16px', height: '16px' }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" style={{ width: '17px', height: '17px' }}>
               <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
               <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
             </svg>
           </div>
           <div>
-            <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#1a1d23' }}>Belleza</p>
-            <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Inventario Admin</p>
+            <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#fff', fontFamily: "'Playfair Display', serif" }}>Belleza</p>
+            <p style={{ margin: 0, fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>Inventario Admin</p>
           </div>
         </div>
       </div>
 
       {/* General */}
       <div style={{ padding: '4px 0 6px' }}>
-        <p style={{ fontSize: '10.5px', color: '#c4c8d4', fontWeight: '600', padding: '6px 24px', letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0 }}>General</p>
+        <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', fontWeight: '600', padding: '6px 24px', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>General</p>
         {navItem('/', 'Dashboard',
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '16px', height: '16px', flexShrink: 0 }}>
             <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
@@ -60,7 +69,7 @@ function Sidebar() {
 
       {/* Catálogo */}
       <div style={{ padding: '4px 0 6px' }}>
-        <p style={{ fontSize: '10.5px', color: '#c4c8d4', fontWeight: '600', padding: '6px 24px', letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0 }}>Catálogo</p>
+        <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', fontWeight: '600', padding: '6px 24px', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>Catálogo</p>
         {navItem('/productos', 'Productos',
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '16px', height: '16px', flexShrink: 0 }}>
             <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
@@ -82,16 +91,17 @@ function Sidebar() {
       </div>
 
       {/* Usuario */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '14px 16px', borderTop: '1px solid #f0f1f5' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+      <div style={{ marginTop: 'auto', padding: '14px 16px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '30px', height: '30px', borderRadius: '50%', background: '#eff6ff',
+            width: '32px', height: '32px', borderRadius: '50%',
+            background: 'var(--coral)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '11px', fontWeight: '600', color: '#3b5bdb'
+            fontSize: '12px', fontWeight: '600', color: '#fff'
           }}>SR</div>
           <div>
-            <p style={{ margin: 0, fontSize: '13px', fontWeight: '500', color: '#1a1d23' }}>Sebastián R.</p>
-            <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Administrador</p>
+            <p style={{ margin: 0, fontSize: '13px', fontWeight: '500', color: '#fff' }}>Sebastián R.</p>
+            <p style={{ margin: 0, fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>Administrador</p>
           </div>
         </div>
       </div>

@@ -1,8 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --cream: #faf6f0;
+  --cream-dark: #f0e9df;
+  --navy: #1a1f6e;
+  --navy-hover: #252b8a;
+  --coral: #e8806a;
+  --coral-light: #f5d5cd;
+  --coral-dark: #d4614a;
+  --white: #ffffff;
+  --text-dark: #1a1818;
+  --text-mid: #5c5c5c;
+  --text-light: #9ca3af;
+  --border: #e8e0d8;
+}
 
 * {
   font-family: 'Inter', sans-serif;
@@ -11,8 +26,8 @@
 
 body {
   margin: 0;
-  background: #f5f6fa;
-  color: #1a1d23;
+  background: var(--cream);
+  color: var(--text-dark);
 }
 
 thead th {
@@ -20,23 +35,33 @@ thead th {
   text-align: left;
   font-size: 11px;
   font-weight: 600;
-  color: #9ca3af;
-  border-bottom: 1px solid #f0f1f5;
+  color: var(--text-light);
+  border-bottom: 1px solid var(--border);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 tbody tr {
-  border-bottom: 1px solid #f5f6fa;
-  transition: background 0.1s;
+  border-bottom: 1px solid #f5f0ea;
+  transition: background 0.15s ease;
 }
 
 tbody tr:hover {
-  background: #fafbfc;
+  background: #fdf9f5;
 }
 
 tbody td {
   padding: 12px 14px;
   font-size: 13.5px;
-  color: #374151;
+  color: var(--text-mid);
+}
+
+/* Animaciones globales */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeInUp 0.35s ease forwards;
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const API = 'http://localhost:8080/api'
 
@@ -9,31 +10,43 @@ function Modal({ open, onClose, onSave, inicial }) {
 
   if (!open) return null
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,20,35,0.35)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', border: '1px solid #e8eaf0', borderRadius: '12px', padding: '26px', width: '460px', maxWidth: '95vw', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1a1d23' }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(26,31,110,0.25)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '14px', padding: '28px', width: '480px', maxWidth: '95vw', boxShadow: '0 16px 48px rgba(26,31,110,0.12)', animation: 'fadeInUp 0.25s ease' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: 'var(--navy)', fontFamily: "'Playfair Display', serif" }}>
             {form.idProveedor ? 'Editar proveedor' : 'Nuevo proveedor'}
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)', fontSize: '18px', transition: 'color 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--coral)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-light)'}
+          >✕</button>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '13px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
           <div style={{ gridColumn: '1/-1' }}>
             <label style={lbl}>Nombre de la empresa</label>
-            <input style={inp} value={form.nombre || ''} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Belleza Total SAS"/>
+            <input style={inp} value={form.nombre || ''} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Belleza Total SAS"
+              onFocus={e => e.target.style.borderColor = 'var(--coral)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}/>
           </div>
           <div>
             <label style={lbl}>Teléfono</label>
-            <input style={inp} value={form.telefono || ''} onChange={e => set('telefono', e.target.value)} placeholder="+57 300 000 0000"/>
+            <input style={inp} value={form.telefono || ''} onChange={e => set('telefono', e.target.value)} placeholder="+57 300 000 0000"
+              onFocus={e => e.target.style.borderColor = 'var(--coral)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}/>
           </div>
           <div>
             <label style={lbl}>Email</label>
-            <input style={inp} type="email" value={form.email || ''} onChange={e => set('email', e.target.value)} placeholder="contacto@empresa.co"/>
+            <input style={inp} type="email" value={form.email || ''} onChange={e => set('email', e.target.value)} placeholder="contacto@empresa.co"
+              onFocus={e => e.target.style.borderColor = 'var(--coral)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}/>
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f0f1f5' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '22px', paddingTop: '18px', borderTop: '1px solid var(--border)' }}>
           <button onClick={onClose} style={btnGhost}>Cancelar</button>
-          <button onClick={() => onSave(form)} style={btnPrimary}>Guardar proveedor</button>
+          <button onClick={() => onSave(form)} style={btnPrimary}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-dark)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--coral)'}
+          >Guardar proveedor</button>
         </div>
       </div>
     </div>
@@ -41,12 +54,12 @@ function Modal({ open, onClose, onSave, inicial }) {
 }
 
 const formVacio = { nombre: '', telefono: '', email: '' }
-
 const iniciales = (nombre) => nombre?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?'
-const fondosAvatar = ['#eff6ff', '#f0fdf4', '#fdf4ff', '#fff5f5', '#fef9ec', '#f5f3ff']
-const coloresAvatar = ['#3b5bdb', '#16a34a', '#7c3aed', '#dc2626', '#d97706', '#4f46e5']
+const fondosAvatar = ['#faf6f0', '#f0f4ff', '#fff5f5', '#f0fdf4', '#fdf4ff']
+const coloresAvatar = ['var(--coral)', 'var(--navy)', 'var(--coral-dark)', '#16a34a', '#7c3aed']
 
 export default function Proveedores() {
+  const navigate = useNavigate()
   const [proveedores, setProveedores] = useState([])
   const [modal, setModal] = useState(false)
   const [editar, setEditar] = useState(formVacio)
@@ -65,16 +78,10 @@ export default function Proveedores() {
     const url = form.idProveedor ? `${API}/proveedores/${form.idProveedor}` : `${API}/proveedores`
     const method = form.idProveedor ? 'PUT' : 'POST'
     await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nombre: form.nombre,
-        telefono: form.telefono,
-        email: form.email
-      })
+      method, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre: form.nombre, telefono: form.telefono, email: form.email })
     })
-    cargar()
-    setModal(false)
+    cargar(); setModal(false)
   }
 
   const eliminar = async (id) => {
@@ -88,21 +95,29 @@ export default function Proveedores() {
   )
 
   return (
-    <div>
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8eaf0', padding: '12px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 5 }}>
-        <span style={{ fontSize: '15px', fontWeight: '600', color: '#1a1d23' }}>Proveedores</span>
+    <div className="fade-in">
+      {/* Topbar */}
+      <div style={{ background: '#fff', borderBottom: '1px solid var(--border)', padding: '14px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: 'var(--navy)', fontFamily: "'Playfair Display', serif" }}>Proveedores</h2>
+          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-light)' }}>{filtrados.length} proveedores registrados</p>
+        </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <div style={{ position: 'relative' }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" style={{ width: '14px', height: '14px', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input value={buscar} onChange={e => setBuscar(e.target.value)} placeholder="Buscar proveedor..." style={{ ...inp, paddingLeft: '34px', width: '220px', background: '#f9fafb' }}/>
+            <input value={buscar} onChange={e => setBuscar(e.target.value)} placeholder="Buscar proveedor..." style={{ ...inp, paddingLeft: '34px', width: '220px', background: 'var(--cream)' }}
+              onFocus={e => e.target.style.borderColor = 'var(--coral)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}/>
           </div>
-          <button onClick={abrirNuevo} style={btnPrimary}>+ Nuevo proveedor</button>
+          <button onClick={abrirNuevo} style={btnPrimary}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-dark)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--coral)'}
+          >+ Nuevo proveedor</button>
         </div>
       </div>
 
-      <div style={{ padding: '26px 28px' }}>
-        <p style={{ margin: '0 0 16px', color: '#9ca3af', fontSize: '13.5px' }}>{filtrados.length} proveedores registrados</p>
-        <div style={{ background: '#fff', border: '1px solid #e8eaf0', borderRadius: '10px' }}>
+      <div style={{ padding: '24px 28px' }}>
+        <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr>
               <th>Empresa</th><th>Teléfono</th><th>Email</th><th></th>
@@ -111,19 +126,25 @@ export default function Proveedores() {
               {filtrados.map((p, i) => (
                 <tr key={p.idProveedor}>
                   <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-                      <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: fondosAvatar[i % fondosAvatar.length], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '600', color: coloresAvatar[i % coloresAvatar.length] }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: fondosAvatar[i % fondosAvatar.length], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '600', color: coloresAvatar[i % coloresAvatar.length], border: '1px solid var(--border)', flexShrink: 0 }}>
                         {iniciales(p.nombre)}
                       </div>
-                      <span style={{ fontWeight: '500', color: '#1a1d23' }}>{p.nombre}</span>
+                      <span style={{ fontWeight: '500', color: 'var(--navy)' }}>{p.nombre}</span>
                     </div>
                   </td>
-                  <td style={{ color: '#6b7280' }}>{p.telefono || '—'}</td>
-                  <td style={{ color: '#3b5bdb', fontSize: '13px' }}>{p.email || '—'}</td>
+                  <td style={{ color: 'var(--text-mid)' }}>{p.telefono || '—'}</td>
+                  <td style={{ color: 'var(--coral)', fontSize: '13px' }}>{p.email || '—'}</td>
                   <td>
                     <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                      <button onClick={() => abrirEditar(p)} style={btnGhost}>Editar</button>
-                      <button onClick={() => eliminar(p.idProveedor)} style={btnDanger}>Eliminar</button>
+                      <button onClick={() => abrirEditar(p)} style={btnGhost}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--navy)'; e.currentTarget.style.color = 'var(--navy)' }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-mid)' }}
+                      >Editar</button>
+                      <button onClick={() => eliminar(p.idProveedor)} style={btnDanger}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-light)'}
+                        onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                      >Eliminar</button>
                     </div>
                   </td>
                 </tr>
@@ -133,13 +154,21 @@ export default function Proveedores() {
         </div>
       </div>
 
+      {/* Volver */}
+      <div style={{ padding: '0 28px 28px' }}>
+        <button onClick={() => navigate('/')} style={{ ...btnGhost, gap: '6px' }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--coral)'; e.currentTarget.style.color = 'var(--coral)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-mid)' }}
+        >← Volver al Dashboard</button>
+      </div>
+
       <Modal open={modal} onClose={() => setModal(false)} onSave={guardar} inicial={editar}/>
     </div>
   )
 }
 
-const lbl = { display: 'block', fontSize: '12.5px', color: '#6b7280', marginBottom: '5px', fontWeight: '500' }
-const inp = { width: '100%', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '7px', padding: '8px 12px', color: '#1a1d23', fontSize: '13.5px', fontFamily: 'Inter, sans-serif', outline: 'none' }
-const btnPrimary = { background: '#3b5bdb', color: '#fff', border: 'none', borderRadius: '7px', padding: '8px 16px', fontSize: '13.5px', fontWeight: '500', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }
-const btnGhost = { background: '#fff', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '7px', padding: '6px 13px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }
-const btnDanger = { background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '7px', padding: '6px 13px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }
+const lbl = { display: 'block', fontSize: '12px', color: 'var(--text-mid)', marginBottom: '5px', fontWeight: '500' }
+const inp = { width: '100%', background: '#fff', border: '1px solid var(--border)', borderRadius: '8px', padding: '9px 12px', color: 'var(--text-dark)', fontSize: '13.5px', fontFamily: 'Inter, sans-serif', outline: 'none', transition: 'border-color 0.2s' }
+const btnPrimary = { background: 'var(--coral)', color: '#fff', border: 'none', borderRadius: '8px', padding: '9px 18px', fontSize: '13.5px', fontWeight: '500', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'background 0.2s ease' }
+const btnGhost = { background: '#fff', color: 'var(--text-mid)', border: '1px solid var(--border)', borderRadius: '8px', padding: '7px 14px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s ease', display: 'inline-flex', alignItems: 'center' }
+const btnDanger = { background: '#fff', color: 'var(--coral-dark)', border: '1px solid var(--coral-light)', borderRadius: '8px', padding: '7px 14px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s ease' }

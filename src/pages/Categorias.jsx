@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const API = 'http://localhost:8080/api'
 
@@ -9,23 +10,29 @@ function Modal({ open, onClose, onSave, inicial }) {
 
   if (!open) return null
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,20,35,0.35)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', border: '1px solid #e8eaf0', borderRadius: '12px', padding: '26px', width: '380px', maxWidth: '95vw', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1a1d23' }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(26,31,110,0.25)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '14px', padding: '28px', width: '400px', maxWidth: '95vw', boxShadow: '0 16px 48px rgba(26,31,110,0.12)', animation: 'fadeInUp 0.25s ease' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: 'var(--navy)', fontFamily: "'Playfair Display', serif" }}>
             {form.idCategoria ? 'Editar categoría' : 'Nueva categoría'}
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-light)', fontSize: '18px', transition: 'color 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--coral)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-light)'}
+          >✕</button>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '13px' }}>
-          <div>
-            <label style={lbl}>Nombre</label>
-            <input style={inp} value={form.nombre || ''} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Cuidado corporal"/>
-          </div>
+        <div>
+          <label style={lbl}>Nombre</label>
+          <input style={inp} value={form.nombre || ''} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Cuidado corporal"
+            onFocus={e => e.target.style.borderColor = 'var(--coral)'}
+            onBlur={e => e.target.style.borderColor = 'var(--border)'}/>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f0f1f5' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '22px', paddingTop: '18px', borderTop: '1px solid var(--border)' }}>
           <button onClick={onClose} style={btnGhost}>Cancelar</button>
-          <button onClick={() => onSave(form)} style={btnPrimary}>Guardar</button>
+          <button onClick={() => onSave(form)} style={btnPrimary}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-dark)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--coral)'}
+          >Guardar</button>
         </div>
       </div>
     </div>
@@ -33,10 +40,11 @@ function Modal({ open, onClose, onSave, inicial }) {
 }
 
 const emojis = ['💄', '🧴', '💆', '💅', '🌸', '🌿', '✨', '🧖']
-const fondos = ['#eff6ff', '#fef9ec', '#f0fdf4', '#fff5f5', '#fdf4ff', '#f0fdf4', '#fffbeb', '#f5f3ff']
+const fondos = ['#faf6f0', '#f0f4ff', '#fff5f5', '#f0fdf4', '#fdf4ff', '#fffbeb']
 const formVacio = { nombre: '' }
 
 export default function Categorias() {
+  const navigate = useNavigate()
   const [categorias, setCategorias] = useState([])
   const [modal, setModal] = useState(false)
   const [editar, setEditar] = useState(formVacio)
@@ -53,13 +61,8 @@ export default function Categorias() {
   const guardar = async (form) => {
     const url = form.idCategoria ? `${API}/categorias/${form.idCategoria}` : `${API}/categorias`
     const method = form.idCategoria ? 'PUT' : 'POST'
-    await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre: form.nombre })
-    })
-    cargar()
-    setModal(false)
+    await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre: form.nombre }) })
+    cargar(); setModal(false)
   }
 
   const eliminar = async (id) => {
@@ -69,33 +72,60 @@ export default function Categorias() {
   }
 
   return (
-    <div>
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8eaf0', padding: '12px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 5 }}>
-        <span style={{ fontSize: '15px', fontWeight: '600', color: '#1a1d23' }}>Categorías</span>
-        <button onClick={abrirNuevo} style={btnPrimary}>+ Nueva categoría</button>
+    <div className="fade-in">
+      {/* Topbar */}
+      <div style={{ background: '#fff', borderBottom: '1px solid var(--border)', padding: '14px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: 'var(--navy)', fontFamily: "'Playfair Display', serif" }}>Categorías</h2>
+          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-light)' }}>{categorias.length} categorías activas</p>
+        </div>
+        <button onClick={abrirNuevo} style={btnPrimary}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-dark)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--coral)'}
+        >+ Nueva categoría</button>
       </div>
 
-      <div style={{ padding: '26px 28px' }}>
-        <p style={{ margin: '0 0 16px', color: '#9ca3af', fontSize: '13.5px' }}>{categorias.length} categorías activas</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
+      <div style={{ padding: '24px 28px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
           {categorias.map((c, i) => (
-            <div key={c.idCategoria} style={{ background: '#fff', border: '1px solid #e8eaf0', borderRadius: '10px', padding: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '11px', marginBottom: '10px' }}>
-                <div style={{ width: '38px', height: '38px', background: fondos[i % fondos.length], borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>
+            <div key={c.idCategoria} style={{
+              background: '#fff', border: '1px solid var(--border)',
+              borderRadius: '12px', padding: '20px',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+            }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(26,31,110,0.08)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+                <div style={{ width: '44px', height: '44px', background: fondos[i % fondos.length], borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', border: '1px solid var(--border)' }}>
                   {emojis[i % emojis.length]}
                 </div>
                 <div>
-                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '500', color: '#1a1d23' }}>{c.nombre}</p>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Categoría #{c.idCategoria}</p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '500', color: 'var(--navy)' }}>{c.nombre}</p>
+                  <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-light)' }}>Categoría #{c.idCategoria}</p>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '7px', paddingTop: '12px', borderTop: '1px solid #f0f1f5' }}>
-                <button onClick={() => abrirEditar(c)} style={{ ...btnGhost, flex: 1, justifyContent: 'center', fontSize: '12.5px' }}>Editar</button>
-                <button onClick={() => eliminar(c.idCategoria)} style={{ ...btnDanger, fontSize: '12.5px' }}>Eliminar</button>
+              <div style={{ display: 'flex', gap: '8px', paddingTop: '14px', borderTop: '1px solid var(--border)' }}>
+                <button onClick={() => abrirEditar(c)} style={{ ...btnGhost, flex: 1, justifyContent: 'center', fontSize: '12.5px' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--navy)'; e.currentTarget.style.color = 'var(--navy)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-mid)' }}
+                >Editar</button>
+                <button onClick={() => eliminar(c.idCategoria)} style={btnDanger}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-light)'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                >Eliminar</button>
               </div>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Volver */}
+      <div style={{ padding: '0 28px 28px' }}>
+        <button onClick={() => navigate('/')} style={{ ...btnGhost, gap: '6px' }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--coral)'; e.currentTarget.style.color = 'var(--coral)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-mid)' }}
+        >← Volver al Dashboard</button>
       </div>
 
       <Modal open={modal} onClose={() => setModal(false)} onSave={guardar} inicial={editar}/>
@@ -103,8 +133,8 @@ export default function Categorias() {
   )
 }
 
-const lbl = { display: 'block', fontSize: '12.5px', color: '#6b7280', marginBottom: '5px', fontWeight: '500' }
-const inp = { width: '100%', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '7px', padding: '8px 12px', color: '#1a1d23', fontSize: '13.5px', fontFamily: 'Inter, sans-serif', outline: 'none' }
-const btnPrimary = { background: '#3b5bdb', color: '#fff', border: 'none', borderRadius: '7px', padding: '8px 16px', fontSize: '13.5px', fontWeight: '500', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }
-const btnGhost = { background: '#fff', color: '#374151', border: '1px solid #e5e7eb', borderRadius: '7px', padding: '6px 13px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }
-const btnDanger = { background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '7px', padding: '6px 13px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }
+const lbl = { display: 'block', fontSize: '12px', color: 'var(--text-mid)', marginBottom: '5px', fontWeight: '500' }
+const inp = { width: '100%', background: '#fff', border: '1px solid var(--border)', borderRadius: '8px', padding: '9px 12px', color: 'var(--text-dark)', fontSize: '13.5px', fontFamily: 'Inter, sans-serif', outline: 'none', transition: 'border-color 0.2s' }
+const btnPrimary = { background: 'var(--coral)', color: '#fff', border: 'none', borderRadius: '8px', padding: '9px 18px', fontSize: '13.5px', fontWeight: '500', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'background 0.2s ease' }
+const btnGhost = { background: '#fff', color: 'var(--text-mid)', border: '1px solid var(--border)', borderRadius: '8px', padding: '7px 14px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s ease', display: 'inline-flex', alignItems: 'center' }
+const btnDanger = { background: '#fff', color: 'var(--coral-dark)', border: '1px solid var(--coral-light)', borderRadius: '8px', padding: '7px 14px', fontSize: '13px', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s ease' }
