@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useSearch } from '../context/SearchContext'
 
 const titles = {
   '/': 'Dashboard',
@@ -17,6 +18,7 @@ export default function Header() {
   const title = titles[location.pathname] || 'Panel'
   const [menuOpen, setMenuOpen] = useState(false)
   const [notiOpen, setNotiOpen] = useState(false)
+  const { query, setQuery } = useSearch()
 
   const notificaciones = [
     { id: 1, texto: 'Shampoo reparador tiene stock crítico', tipo: 'coral', tiempo: 'Hace 5 min' },
@@ -53,7 +55,10 @@ export default function Header() {
           <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" style={{ width: '14px', height: '14px', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
-          <input placeholder="Buscar..." style={{
+          <input
+                      value={query}
+                      onChange={e => setQuery(e.target.value)}
+                      placeholder="Buscar..." style={{
             background: 'var(--cream)', border: '1px solid var(--border)',
             borderRadius: '8px', padding: '7px 14px 7px 34px',
             color: 'var(--text-dark)', fontSize: '13px',

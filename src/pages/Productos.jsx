@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSearch } from '../context/SearchContext'
 
 const API = 'http://localhost:8080/api'
 
@@ -96,7 +97,7 @@ export default function Productos() {
   const [proveedores, setProveedores] = useState([])
   const [modal, setModal] = useState(false)
   const [editar, setEditar] = useState(formVacio)
-  const [buscar, setBuscar] = useState('')
+  const { query: buscar } = useSearch()
 
   const cargar = () => {
     fetch(`${API}/productos`).then(r => r.json()).then(setProductos)
@@ -133,25 +134,17 @@ export default function Productos() {
 
   return (
     <div className="fade-in">
-      {/* Topbar */}
-      <div style={{ background: '#fff', borderBottom: '1px solid var(--border)', padding: '14px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: 'var(--navy)', fontFamily: "'Playfair Display', serif" }}>Productos</h2>
-          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-light)' }}>{filtrados.length} productos registrados</p>
-        </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" style={{ width: '14px', height: '14px', position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input value={buscar} onChange={e => setBuscar(e.target.value)} placeholder="Buscar producto..." style={{ ...inp, paddingLeft: '34px', width: '220px', background: 'var(--cream)' }}
-              onFocus={e => e.target.style.borderColor = 'var(--coral)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}/>
+          {/* Topbar */}
+          <div style={{ background: '#fff', borderBottom: '1px solid var(--border)', padding: '14px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: 'var(--navy)', fontFamily: "'Playfair Display', serif" }}>Productos</h2>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-light)' }}>{filtrados.length} productos registrados</p>
+            </div>
+            <button onClick={abrirNuevo} style={btnPrimary}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-dark)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'var(--coral)'}
+            >+ Nuevo producto</button>
           </div>
-          <button onClick={abrirNuevo} style={btnPrimary}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--coral-dark)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--coral)'}
-          >+ Nuevo producto</button>
-        </div>
-      </div>
 
       <div style={{ padding: '24px 28px' }}>
         <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>

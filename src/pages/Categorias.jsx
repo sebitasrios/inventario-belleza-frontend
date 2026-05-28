@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSearch } from '../context/SearchContext'
 
 const API = 'http://localhost:8080/api'
 
@@ -48,6 +49,7 @@ export default function Categorias() {
   const [categorias, setCategorias] = useState([])
   const [modal, setModal] = useState(false)
   const [editar, setEditar] = useState(formVacio)
+  const { query: buscar } = useSearch()
 
   const cargar = () => {
     fetch(`${API}/categorias`).then(r => r.json()).then(setCategorias)
@@ -87,7 +89,7 @@ export default function Categorias() {
 
       <div style={{ padding: '24px 28px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-          {categorias.map((c, i) => (
+          {categorias.filter(c => c.nombre?.toLowerCase().includes(buscar.toLowerCase())).map((c, i) => (
             <div key={c.idCategoria} style={{
               background: '#fff', border: '1px solid var(--border)',
               borderRadius: '12px', padding: '20px',
